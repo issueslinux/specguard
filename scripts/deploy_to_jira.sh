@@ -8,6 +8,12 @@ SITE="issueslinux.atlassian.net"
 : "${FORGE_EMAIL:=issueslinux@gmail.com}"
 export FORGE_EMAIL
 
+# Never forward secrets to npm lifecycle scripts or locally-run tests.
+# Keep the token non-exported and add it only to Forge CLI invocations.
+FORGE_TOKEN="${FORGE_API_TOKEN:-}"
+export -n FORGE_TOKEN
+unset FORGE_API_TOKEN
+
 if [[ "${1:-}" == "--verify-only" ]]; then
   npm test
   npm run check
@@ -22,7 +28,7 @@ if [[ "$FORGE_EMAIL" != "issueslinux@gmail.com" ]]; then
   echo "BLOCK: unexpected Forge account; refusing to install on $SITE" >&2
   exit 2
 fi
-if [[ -z "${FORGE_API_TOKEN:-}" ]]; then
+if [[ -z "$FORGE_TOKEN" ]]; then
   echo "BLOCK: export a scoped FORGE_API_TOKEN (Forge app) in your trusted shell; not in git." >&2
   exit 2
 fi
@@ -44,11 +50,11 @@ npm run check
 
 if grep -q 'ari:cloud:ecosystem::app/00000000-0000-0000-0000-000000000000' manifest.yml; then
   echo "Registering existing SpecGuard source. This may require interactive developer space / terms confirmation."
-  "$FORGE_CLI" register SpecGuard
+  FORGE_API_TOKEN="$FORGE_TOKEN" "$FORGE_CLI" register SpecGuard
 fi
 npm run preflight -- --strict
-"$FORGE_CLI" lint
-"$FORGE_CLI" deploy -e development
-"$FORGE_CLI" install -e development -s "$SITE" -p jira --confirm-scopes
-"$FORGE_CLI" install list
+FORGE_API_TOKEN="$FORGE_TOKEN" "$FORGE_CLI" lint
+FORGE_API_TOKEN="$FORGE_TOKEN" "$FORGE_CLI" deploy -e development
+FORGE_API_TOKEN="$FORGE_TOKEN" "$FORGE_CLI" install -e development -s "$SITE" -p jira --confirm-scopes
+FORGE_API_TOKEN="$FORGE_TOKEN" "$FORGE_CLI" install list
 echo "Forge deployment and install commands completed; verify the live issue panel at https://$SITE/browse/SGD-1"
