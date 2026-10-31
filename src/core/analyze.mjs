@@ -15,6 +15,16 @@ export function adfToText(node) {
     if (n.type === 'text' && typeof n.text === 'string') { const token = n.text.slice(0, MAX_TEXT - size); result.push(token); size += token.length; return; }
     if (n.type === 'hardBreak') { result.push('\n'); size++; return; }
     const block = ['paragraph','heading','listItem','codeBlock','blockquote','tableRow'].includes(n.type);
+    // Preserve ADF heading and list-item boundaries. Without these markers,
+    // bare bullets are invisible to the acceptance-criteria parser and bullets
+    // under a later heading can be mistaken for acceptance criteria.
+    if (n.type === 'heading') {
+      const level = Number.isInteger(n.attrs?.level) ? Math.max(1, Math.min(6, n.attrs.level)) : 2;
+      const prefix = '#'.repeat(level) + ' ';
+      result.push(prefix); size += prefix.length;
+    } else if (n.type === 'listItem') {
+      result.push('- '); size += 2;
+    }
     if (Array.isArray(n.content)) walk(n.content, depth + 1);
     if (block) { result.push('\n'); size++; }
   }

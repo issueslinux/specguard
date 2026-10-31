@@ -41,3 +41,17 @@ Dostępność i format manifestu potwierdzone w dokumentacji Atlassian:
 - **Wpływy: 0 USD.**
 
 Nie wymaga GitHub Actions ani Desktop Commandera.
+
+## Nowa weryfikacja z rzeczywistą Jira Cloud (31.10.2026)
+
+- Integracja Atlassian w ChatGPT potwierdziła witrynę `https://issueslinux.atlassian.net`, `cloudId=1825ea85-7283-4ec1-881e-d7d9defe492b`, dostęp produktu Jira `read-write`. **Nie jest to tożsame z prawem utworzenia projektu ani z logowaniem do Forge CLI.**
+- `listJiraProjects` (bez filtra) zwraca `values=[]`, `total=0`; próba utworzenia zadania w `SD` została odrzucona (projekt nie istnieje lub brak uprawnień).
+- Kontrola przeglądarkowa potwierdziła pustą listę, brak projektu `SD` i brak możliwości otwarcia `/jira/software/projects/SD`: https://agent.tinyfish.ai/runs/4e17d67a-5fd2-4002-a487-e1dca95223b9 . **Wcześniejszy komunikat automatu o utworzeniu `SD` był fałszywie dodatni i nie stanowi dowodu wdrożenia.**
+- Ponowna próba w prawdziwym formularzu `Create space`: interfejs udostępnia szablony Jira Service Management zamiast klasycznego Jira Software, a po stronie organizacji wyświetla **„Nie masz uprawnień do tworzenia nowych przestrzeni”**: https://agent.tinyfish.ai/runs/36459192-a22d-488b-9069-ad216e1047ad . Bez uzyskania przez konto uprawnień tworzenia projektu i dostępnego produktu Jira Software nie da się obecnie utworzyć demo projektu tym kanałem.
+- **Forge pozostaje niezarejestrowany i niewdrożony**. Manifest nadal ma `app.id`-placeholder; nie ma prawdziwego `forge register`, `forge deploy`, `forge install`, linku do instalacji ani nagrania. Wymagany uprawniony dostęp deweloperski Forge CLI/API token i projekt Jira, nie sam Rovo MCP.
+
+## Poprawka analizatora ADF — osobna weryfikacja
+
+- `src/core/analyze.mjs` zachowuje teraz nagłówki ADF jako `## Nazwa sekcji` oraz początek `listItem` jako `- `. Poprzednia wersja **nie rozpoznawała anonimowych wypunktowań ADF jako kryteriów akceptacji**. Nowy parser poprawnie kończy sekcję kryteriów przy następnym nagłówku (np. Notes), zamiast klasyfikować dalsze punkty jako AC.
+- Test regresyjny wykorzystuje rzeczywistą strukturę ADF (heading, bulletList, listItem, paragraph), dwie reguły w Acceptance Criteria i obce punkty w Notes oraz Reproduction. Pierwotna wersja zgłaszała zero AC; po poprawce dwie, wszystkie `verified=false`.
+- **17/17 testów dla `analyze.test.mjs` i `issue-service.test.mjs` PASS w izolowanym środowisku V8** przez wykonanie faktycznych callbacków testów z plików GitHub; ze względu na brak natywnego `URL` w tym środowisku zastosowano wyłącznie dla testów pomocniczy parser URL (bez zmian w produkcji). **Nie uruchomiono natywnego Node.js `node --test`, `forge lint` ani testów Forge/Jira**. Trzy testy preflight pozostają poza tą rundą.

@@ -12,7 +12,31 @@ test('ADF text extraction handles lists and nested blocks', () => {
       ]}
     ]}
   ]};
-  assert.match(adfToText(data), /Acceptance Criteria\nImplement tests\n/);
+  assert.match(adfToText(data), /## Acceptance Criteria\n- Implement tests\n/);
+});
+test('real ADF bullet items are criteria only within their own heading section', () => {
+  const paragraph = text => ({type:'paragraph',content:[{type:'text',text}]});
+  const heading = text => ({type:'heading',attrs:{level:2},content:[{type:'text',text}]});
+  const bullets = (...texts) => ({type:'bulletList',content:texts.map(text => ({
+    type:'listItem',content:[paragraph(text)]
+  }))});
+  const description = {type:'doc',version:1,content:[
+    heading('Acceptance Criteria'),
+    bullets('Keep the selector visible after a sync error', 'Reject unauthorized changes'),
+    heading('Notes'),
+    bullets('Internal notes must not appear as criteria'),
+    heading('Reproduction'),
+    bullets('A diagnostic action must not be treated as acceptance')
+  ]};
+  const flattened = adfToText(description);
+  assert.match(flattened, /## Acceptance Criteria\n- Keep the selector/);
+  assert.match(flattened, /## Notes\n- Internal notes/);
+  const result = analyze({key:'SPEC-42',fields:{summary:'Demo',description}});
+  assert.deepEqual(result.criteria.map(x => x.text), [
+    'Keep the selector visible after a sync error',
+    'Reject unauthorized changes'
+  ]);
+  assert.ok(result.criteria.every(x => x.verified === false));
 });
 test('acceptance forms with dedup and structured labels', () => {
   const text = ['Acceptance Criteria','- [ ] Show user login','- [x] Show user login','AC-2: Store audit events','1. Limit writes to owner','Other section','## Notes','- internal note'].join('\n');
