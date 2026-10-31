@@ -4,12 +4,16 @@
   "private": true,
   "description": "Evidence-aware acceptance-criteria triage in Jira issues for Codegeist 2026",
   "type": "module",
-  "scripts": {"test":"node --test test/*.test.mjs", "check":"node --check src/core/analyze.mjs && node --check src/backend/index.js"},
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check src/core/analyze.mjs && node --check src/backend/index.js && node --check src/backend/issue-service.mjs",
+    "preflight": "node scripts/preflight.mjs"
+  },
   "dependencies": {
-    "@forge/api":"^5.0.0",
-    "@forge/bridge":"^5.0.0",
-    "@forge/react":"^11.0.0",
-    "@forge/resolver":"^1.6.0",
-    "react":"^18.3.1"
+    "@forge/api": "^5.0.0",
+    "@forge/bridge": "^5.0.0",
+    "@forge/react": "^11.0.0",
+    "@forge/resolver": "^1.6.0",
+    "react": "^18.3.1"
   }
 }

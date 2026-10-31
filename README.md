@@ -36,6 +36,20 @@ npm run check
 
 **QA aktualnego źródła:** 10/10 testów `node --test` PASS oraz `npm run check` PASS na Node 22.16.0; pełny wykaz w [AUDIT_2026-10-31.md](AUDIT_2026-10-31.md). Nie wykonywano `forge deploy`, bo konto Atlassian/Forge i sieć rejestracyjna nie są dostępne.
 
+## Forge API test and deployment preflight
+
+The Jira read-only resolver delegates to [issue-service.mjs](src/backend/issue-service.mjs), a dependency-free, testable service. Tests cover a successful issue lookup, invalid keys, access denied, missing/invalid JSON, gateway returning a different issue and no assertion of passing tests.
+
+```sh
+npm test
+npm run check
+npm run preflight
+npm run preflight -- --json
+npm run preflight -- --strict
+```
+
+The **strict** preflight command exits with code **2** while the Forge app ID is a placeholder or the dependencies are not installed. Passing the static check would mean only *eligible to attempt deployment*, **not** deployed, shared, or accepted into Codegeist; see [deployment checklist](DEPLOYMENT_CHECKLIST.md). Results in this environment: **19/19 tests PASS**, `npm run check` PASS, and preflight reports **2 deployment blockers** (placeholder app ID, missing local dependency installation); no forge lint, deploy, install, or Devpost submission.
+
 ## Deploy to your own Jira development instance (required before actual entry)
 
 1. Install an eligible Atlassian Forge CLI and create a free developer Jira Cloud site. Authenticate using `forge login`.
