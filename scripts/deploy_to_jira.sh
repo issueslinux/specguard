@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# SpecGuard: repeatable, fail-closed deployment to the owner's verified Jira.
+# Run from a trusted shell with FORGE_API_TOKEN set. Never commit the token.
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+SITE="issueslinux.atlassian.net"
+: "${FORGE_EMAIL:=issueslinux@gmail.com}"
+export FORGE_EMAIL
+
+if [[ "${1:-}" == "--verify-only" ]]; then
+  npm test
+  npm run check
+  npm run preflight -- --json
+  exit 0
+fi
+if [[ "${1:-}" != "--deploy" ]]; then
+  echo "Usage: $0 --verify-only|--deploy" >&2
+  exit 2
+fi
+if [[ "$FORGE_EMAIL" != "issueslinux@gmail.com" ]]; then
+  echo "BLOCK: unexpected Forge account; refusing to install on $SITE" >&2
+  exit 2
+fi
+if [[ -z "${FORGE_API_TOKEN:-}" ]]; then
+  echo "BLOCK: export a scoped FORGE_API_TOKEN (Forge app) in your trusted shell; not in git." >&2
+  exit 2
+fi
+if ! command -v node >/dev/null || ! command -v npm >/dev/null; then
+  echo "BLOCK: Node.js and npm must be installed." >&2
+  exit 2
+fi
+
+# Avoid root privileges and global npm installation: put CLI in ignored local tools.
+npm install --prefix .forge-tools --no-audit --no-fund @forge/cli@latest
+FORGE_CLI="$PWD/.forge-tools/node_modules/.bin/forge"
+if [[ ! -x "$FORGE_CLI" ]]; then
+  echo "BLOCK: Forge CLI installation did not produce executable." >&2
+  exit 2
+fi
+npm install --no-audit --no-fund
+npm test
+npm run check
+
+if grep -q 'ari:cloud:ecosystem::app/00000000-0000-0000-0000-000000000000' manifest.yml; then
+  echo "Registering existing SpecGuard source. This may require interactive developer space / terms confirmation."
+  "$FORGE_CLI" register SpecGuard
+fi
+npm run preflight -- --strict
+"$FORGE_CLI" lint
+"$FORGE_CLI" deploy -e development
+"$FORGE_CLI" install -e development -s "$SITE" -p jira --confirm-scopes
+"$FORGE_CLI" install list
+echo "Forge deployment and install commands completed; verify the live issue panel at https://$SITE/browse/SGD-1"

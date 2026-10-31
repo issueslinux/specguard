@@ -52,6 +52,15 @@ npm run preflight -- --strict
 
 The **strict** preflight command exits with code **2** while the Forge app ID is a placeholder or the dependencies are not installed. Passing the static check would mean only *eligible to attempt deployment*, **not** deployed, shared, or accepted into Codegeist; see [deployment checklist](DEPLOYMENT_CHECKLIST.md). Results in this environment: **19/19 tests PASS**, `npm run check` PASS, and preflight reports **2 deployment blockers** (placeholder app ID, missing local dependency installation); no forge lint, deploy, install, or Devpost submission.
 
+## Real Jira Cloud test fixture — confirmed 31 October 2026
+
+- Jira Software project **[SpecGuard Demo (SGD)](https://issueslinux.atlassian.net/jira/software/projects/SGD)** has been created on the owner's site. Confirmation: Atlassian `listJiraProjects` returned `id=10000`, `key=SGD`, `projectTypeKey=software`, `style=next-gen`.
+- Demo work items created and independently read via Jira API: **[SGD-1](https://issueslinux.atlassian.net/browse/SGD-1)** (three explicit ACs, reproduction, no verified evidence) and **[SGD-2](https://issueslinux.atlassian.net/browse/SGD-2)** (intentionally missing requirements). Both marked FICTIONAL.
+- Jira project creation was unblocked by granting the existing admin group `jira-admins-issueslinux` the **Create team-managed projects** global permission. No payment, new public project or unrelated permissions were added.
+- **The Forge issue panel is NOT deployed, installed or tested in Jira**. The above proves only that the authorized live Jira test environment now exists.
+- The existing app folder contains the Forge manifest with a placeholder app ID, so registration of this **existing app source** is through `forge register`, not `forge create` (which scaffolds a different app). Node package/Forge CLI installation and scoped API-token authentication remain necessary.
+- Dedicated [deployment checklist](DEPLOYMENT_CHECKLIST.md) and [single-command development deployment script](scripts/deploy_to_jira.sh) separate actual deploy/install from offline testing.
+
 ## Deploy to your own Jira development instance (required before actual entry)
 
 1. Install an eligible Atlassian Forge CLI and create a free developer Jira Cloud site. Authenticate using `forge login`.
@@ -59,7 +68,7 @@ The **strict** preflight command exits with code **2** while the Forge app ID is
 3. `npm install && forge deploy && forge install` on the test Jira site. Open a Jira issue, select **SpecGuard - Acceptance Evidence** panel. Check the returned issue is the one you are authorized to view.
 4. Obtain and test a Forge sharing/installation link, capture an actual screen recording of an installed working app, then complete Devpost Codegeist registration and submission. The contest requires a publicly available YouTube demo, installation URL, a category, setup instructions and a working app; no CLI-only or private repo package meets that submission requirement.
 
-The Forge CLI, package installation, Jira credentials, test site, real deployment, public video, sharing URL and Devpost account were **not available** in the current execution environment. The README is a truthful deployment plan, **not evidence of deployment**.
+The Jira Cloud site and test project **are now available**; Forge CLI, package installation, Forge registration, real deployment, public video, sharing URL and Devpost submission **remain unverified** in this execution environment. The README is a truthful deployment plan, **not evidence of deployment**.
 
 ## Competition
 
