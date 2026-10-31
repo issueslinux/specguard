@@ -1,3 +1,5 @@
+> **Codegeist judge packet:** [CODEGEIST_JUDGE_PACKET.md](CODEGEIST_JUDGE_PACKET.md) contains ready-to-review Devpost text, authorized Jira install/test steps, a <3-minute **real app** video plan and explicit external gates. The app cannot honestly be called submitted until Forge registration/deployment, a verified judge installation link, a public YouTube video and a Devpost submission exist. The offline source tests do not satisfy these gates.
+
 # SpecGuard — evidence-aware Jira issue review (Codegeist 2026 candidate)
 
 **Author / proposed entrant:** Daniel Paluszek (GitHub `issueslinux`). **Status:** real source + offline tests, **not** registered, deployed, publicly submitted, judged, accepted or awarded. Developed after Codegeist 2026 opened on October 27.
