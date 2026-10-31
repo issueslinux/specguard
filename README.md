@@ -21,6 +21,21 @@ npm test
 npm run check
 ```
 
+## Audyt dowodów (31.10.2026)
+
+Nowa wersja nie uważa linku do GitHub Issue ani pustego pola `Evidence: TODO` za dowód wykonania testów. Rozpoznaje jedynie **potencjalne referencje** do PR, przebiegu CI lub raportu testowego; samo ich istnienie nie jest potwierdzeniem zaliczenia. Dodatkowe testy sprawdzają również podszywanie się pod domenę GitHub.
+
+Można wygenerować reprodukowalny, jawnie **niezweryfikowany** raport Markdown z przykładowej sprawy:
+
+```sh
+node demo.mjs --markdown
+node demo.mjs examples/realistic-issue.json --markdown
+npm test
+npm run check
+```
+
+**QA aktualnego źródła:** 10/10 testów `node --test` PASS oraz `npm run check` PASS na Node 22.16.0; pełny wykaz w [AUDIT_2026-10-31.md](AUDIT_2026-10-31.md). Nie wykonywano `forge deploy`, bo konto Atlassian/Forge i sieć rejestracyjna nie są dostępne.
+
 ## Deploy to your own Jira development instance (required before actual entry)
 
 1. Install an eligible Atlassian Forge CLI and create a free developer Jira Cloud site. Authenticate using `forge login`.

@@ -57,12 +57,52 @@ export function extractCriteria(text) {
 
 const LINK = /https?:\/\/[^\s<>)"']+/g;
 export function evidenceLinks(text) {
-  const matches = String(text).slice(0,MAX_TEXT).match(LINK) || [];
+  const matches = String(text).slice(0, MAX_TEXT).match(LINK) || [];
   const seen = new Set();
-  return matches.filter(link => { const url = link.replace(/[.,;!?]+$/, '');
+  return matches.filter(link => {
+    const url = link.replace(/[.,;!?]+$/, '');
     if (!/^https:\/\//.test(url)) return false;
-    if (seen.has(url)) return false; seen.add(url); return true;
+    if (seen.has(url)) return false;
+    seen.add(url); return true;
   }).map(url => url.replace(/[.,;!?]+$/, '')).slice(0, 20);
+}
+
+// A GitHub issue describes a problem; by itself it is NEVER test evidence.
+// Even a matched PR or CI run is merely a reference, not proof of success.
+export function classifyEvidenceUrl(url) {
+  let parsed;
+  try { parsed = new URL(url); } catch { return null; }
+  if (parsed.protocol !== 'https:') return null;
+  const host = parsed.hostname.toLowerCase();
+  const path = parsed.pathname;
+  if (host === 'github.com') {
+    if (/^\/[^/]+\/[^/]+\/pull\/[1-9][0-9]*\/?$/.test(path)) return 'pull_request';
+    if (/^\/[^/]+\/[^/]+\/actions\/runs\/[1-9][0-9]*\/?$/.test(path)) return 'ci_run';
+    return null;
+  }
+  if (/^([^.]+\.)*github\.com$/.test(host)) return null;
+  // Generic results are only suggested for review, not marked as verified.
+  if (/\/(?:test-results|test-runs|test-reports|reports|artifacts)\/[^/]+/i.test(path)) return 'test_report';
+  return null;
+}
+
+export function markdownReport(result) {
+  const safe = (value) => String(value ?? '').replace(/[\r\n]+/g, ' ').replace(/[\[\]<>*|`\\]/g, '\\$&').slice(0, 600);
+  const lines = [
+    `# SpecGuard report: ` + safe(result.key || 'unnamed issue'),
+    '',
+    `**Issue:** ` + safe(result.summary),
+    `**Specification checks:** ` + result.completeness.present + '/' + result.completeness.total + ' present. Not a quality, release or test-pass score.',
+    '',
+    '## Gaps', '',
+    ...(result.completeness.missing.length ? result.completeness.missing.map(x => `- ` + safe(x)) : ['- No structural gaps detected.']),
+    '', '## Acceptance criteria (not verified)', '',
+    ...(result.criteria.length ? result.criteria.map(x => `- [ ] ` + safe(x.id) + ': ' + safe(x.text)) : ['- None found.']),
+    '', '## Candidate evidence references (unverified)', '',
+    ...(result.evidenceDetails.length ? result.evidenceDetails.map(x => `- ` + safe(x.kind) + ': ' + safe(x.url)) : ['- None found.']),
+    '', '> ' + safe(result.disclaimer), ''
+  ];
+  return lines.join('\n');
 }
 
 export function analyze(issue) {
@@ -76,9 +116,12 @@ export function analyze(issue) {
   if (!/(reproduction|steps to reproduce|action performed|how to reproduce)\s*:/i.test(desc) && !/Given\s+[^\n]+/i.test(desc))
     missing.push('Reproduction or verification steps are not explicit.');
   const links = evidenceLinks(desc);
-  const references = links.filter(x=>/github\.com\/.+\/(?:pull|actions|issues)\/\d+|\/(?:test|test-run|report|artifacts?)\b/i.test(x));
-  if (!references.length && !/\b(?:test\s+(?:command|plan)|evidence|proof)\s*:/i.test(desc))
-    missing.push('No explicit test or evidence reference was found.');
+  const evidenceDetails = links.map(url => ({url, kind: classifyEvidenceUrl(url)}))
+    .filter(item => item.kind !== null);
+  const references = evidenceDetails.map(item => item.url);
+  // An "Evidence:" placeholder or link to the issue itself is not a test result.
+  if (!references.length)
+    missing.push('No review, CI run or test-report reference was found.');
   const coverage = 4 - missing.length;
   return {
     key: typeof issue?.key === 'string' ? issue.key : '',
@@ -86,6 +129,7 @@ export function analyze(issue) {
     criteria: criteria.map((criterion, i) => ({ id: `AC-${String(i + 1).padStart(2,'0')}`, text: criterion, verified: false })),
     completeness: { present: coverage, total: 4, missing },
     evidenceReferences: references,
+    evidenceDetails,
     externalLinks: links,
     disclaimer: 'Specification completeness only. No tests were executed; no acceptance criterion was verified.'
   };
