@@ -1,0 +1,15 @@
+{
+  "name": "specguard-forge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Evidence-aware acceptance-criteria triage in Jira issues for Codegeist 2026",
+  "type": "module",
+  "scripts": {"test":"node --test test/*.test.mjs", "check":"node --check src/core/analyze.mjs && node --check src/backend/index.js"},
+  "dependencies": {
+    "@forge/api":"^5.0.0",
+    "@forge/bridge":"^5.0.0",
+    "@forge/react":"^11.0.0",
+    "@forge/resolver":"^1.6.0",
+    "react":"^18.3.1"
+  }
+}
