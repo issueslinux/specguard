@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {mkdtempSync, mkdirSync, copyFileSync, writeFileSync, chmodSync, readFileSync, rmSync} from 'node:fs';
+import {mkdtempSync, mkdirSync, copyFileSync, writeFileSync, chmodSync, readFileSync, rmSync, existsSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join, dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -30,6 +30,9 @@ function fixture() {
   ].join('\n') + '\n';
   writeFileSync(npm, stub);
   chmodSync(npm, 0o755);
+  const node = join(root, 'bin', 'node');
+  writeFileSync(node, '#!/usr/bin/env bash\nif [[ "${1:-}" == "--version" ]]; then echo "${MOCK_NODE_VERSION:-v22.23.4}"; exit 0; fi\nexit 4\n');
+  chmodSync(node, 0o755);
   return {root, log: join(root, 'events.txt')};
 }
 
@@ -67,4 +70,39 @@ test('verify-only does not expose even a preconfigured Forge token to npm', () =
     assert.match(log, /npm:CLEAN/);
     assert.doesNotMatch(log, /LEAK|FAKE_SECRET_FOR_TEST_ONLY/);
   } finally { rmSync(f.root, {recursive:true, force:true}); }
+});
+
+
+test('Forge CLI rejects obsolete Node releases before npm can run', () => {
+  for (const version of ['v20.30.0', 'v22.16.0', 'v22.23.3', 'v24.22.0', 'v25.99.0', 'v26.12.0']) {
+    const f=fixture();
+    try {
+      const result=spawnSync('bash', [join(f.root, 'scripts', 'deploy_to_jira.sh'), '--deploy'], {
+        encoding:'utf8',timeout:12000,
+        env:{...process.env, FORGE_EMAIL:'issueslinux@gmail.com',
+          FORGE_API_TOKEN:'FAKE_SECRET_FOR_TEST_ONLY', MOCK_NODE_VERSION:version,
+          MOCK_LOG:f.log, PATH:join(f.root,'bin') + ':' + process.env.PATH}
+      });
+      assert.equal(result.status,2, version + ' ' + result.stdout + result.stderr);
+      assert.match(result.stderr,/requires >=22\.23\.4/);
+      assert.doesNotMatch(result.stderr,/FAKE_SECRET_FOR_TEST_ONLY/);
+      assert.equal(existsSync(f.log), false, version + ' should block before npm');
+    } finally { rmSync(f.root,{recursive:true,force:true}); }
+  }
+});
+
+test('Forge CLI accepts documented Node LTS minima in isolated stub', () => {
+  for (const version of ['v22.23.4','v22.30.0','v24.22.1','v26.12.1']) {
+    const f=fixture();
+    try {
+      const result=spawnSync('bash', [join(f.root, 'scripts', 'deploy_to_jira.sh'), '--deploy'], {
+        encoding:'utf8',timeout:12000,
+        env:{...process.env, FORGE_EMAIL:'issueslinux@gmail.com',
+          FORGE_API_TOKEN:'FAKE_SECRET_FOR_TEST_ONLY', MOCK_NODE_VERSION:version,
+          MOCK_LOG:f.log, PATH:join(f.root,'bin') + ':' + process.env.PATH}
+      });
+      assert.equal(result.status,0, version + ' ' + result.stdout + result.stderr);
+      assert.match(readFileSync(f.log,'utf8'),/forge:deploy -e development:TOKEN/);
+    } finally { rmSync(f.root,{recursive:true,force:true}); }
+  }
 });

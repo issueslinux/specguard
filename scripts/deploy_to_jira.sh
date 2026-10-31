@@ -37,6 +37,23 @@ if ! command -v node >/dev/null || ! command -v npm >/dev/null; then
   exit 2
 fi
 
+# Atlassian Forge CLI minimums changed on 26 October 2026. Node 20 and early
+# Node 22 releases cannot run the current CLI. Validate before npm downloads.
+NODE_VERSION="$(node --version)"
+if [[ ! "$NODE_VERSION" =~ ^v?([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+  echo "BLOCK: cannot parse Node.js version '$NODE_VERSION'." >&2
+  exit 2
+fi
+NODE_MAJOR="${BASH_REMATCH[1]}"
+NODE_MINOR="${BASH_REMATCH[2]}"
+NODE_PATCH="${BASH_REMATCH[3]}"
+if ! (( (NODE_MAJOR == 22 && (NODE_MINOR > 23 || (NODE_MINOR == 23 && NODE_PATCH >= 4))) ||
+        (NODE_MAJOR == 24 && (NODE_MINOR > 22 || (NODE_MINOR == 22 && NODE_PATCH >= 1))) ||
+        (NODE_MAJOR == 26 && (NODE_MINOR > 12 || (NODE_MINOR == 12 && NODE_PATCH >= 1))) )); then
+  echo "BLOCK: Node.js $NODE_VERSION unsupported by Forge CLI; requires >=22.23.4, >=24.22.1, or >=26.12.1 within those LTS majors." >&2
+  exit 2
+fi
+
 # Avoid root privileges and global npm installation: put CLI in ignored local tools.
 npm install --prefix .forge-tools --no-audit --no-fund @forge/cli@latest
 FORGE_CLI="$PWD/.forge-tools/node_modules/.bin/forge"
