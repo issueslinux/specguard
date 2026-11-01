@@ -45,3 +45,24 @@ Record a true browser session of the authorized `SGD-1` and `SGD-2` Jira issues 
 | Acceptance/prize/payment | NONE CONFIRMED |
 
 The synthetic Jira issues are not live production customer data; the words `production` above refer specifically to the **Forge environment**, not business-system quality or real-world QA validation.
+
+
+## 1 November — authentic Codegeist demo video created, public upload explicitly blocked
+
+Real footage of the **running Forge panel** was captured on the authorized `hexagony-01` X11 desktop from the signed-in Jira Cloud `issueslinux.atlassian.net` browser. This is **not** `demo.mjs`, synthetic UI, PowerPoint, or a simulation; only the *Jira issue contents* were intentionally fictional. It demonstrates `SGD-1` (three acceptance criteria, all `NOT VERIFIED`; specification completeness `3/4`; missing test/review evidence and visible Refresh analysis) and `SGD-2` (zero structured criteria, completeness `0/4`; missing sections). English narration was prepared; no real tests or customer data are claimed.
+
+**Verified on the owner host:**
+- Actual finalized video: `/mnt/nvme_fast/hunter/data/specguard-demo/specguard_live_jira_codegeist_2026.mp4` (**local only, not part of the public Git repository**).
+- Duration **74.024 seconds**, H.264, **1600×900**, 15 fps, AAC English narration; file size **1,923,896 bytes**.
+- SHA-256 **`00d521a24791754440d0a182a15df5410ef3ecb0246b20e642ee6feb4dde4265`**.
+- Full decode via `ffmpeg -i video.mp4 -f null -` passed. Representative frames from both actual Jira issues reviewed; earlier trial recordings included foreground interference and were **discarded**, not published.
+- Two segments and source narration files remain privately under `data/specguard-demo/` (protected by local Git exclusion). Do not add binary screen recordings, private signed judge links, hidden browser tokens or background desktop data to GitHub.
+- Latest regression check: `npm test` **35/35 PASS**; check command rerun separately.
+
+**Publishing blocker:** an authenticated **Linux Issues** YouTube Studio channel was opened on the owner's Firefox/X11 desktop. However the GNOME session subsequently switched to its **password-protected lock screen** (verified with a root-window screenshot). Thus uploading the file and selecting public visibility could **not** be completed or truthfully confirmed. No public video watch URL exists in the available evidence. Do not fabricate a YouTube link or report an uploaded/public demo based on a local MP4.
+
+**Precisely required owner action:** unlock the `hexagony-01` GNOME desktop session using the owner's password. If YouTube prompts additional account-level authentication/MFA, complete it personally. Then in the logged-in `https://studio.youtube.com/` on channel `Linux Issues`, upload the existing finalized MP4, give it a truthful English title/description and choose **Public**. Retrieve and independently open the actual YouTube watch URL. A Codegeist Devpost submission is still blocked by the missing URL, and additionally requires the user's human verification/login to `https://codegeist2026.devpost.com/` plus any personal rules/eligibility action. The real signed Forge installation link must be copied from the developer Distribution console privately into the Devpost judge field.
+
+Status: `REAL_DEMO_RECORDED_AND_QA_PASS`, `PUBLIC_YOUTUBE_MISSING (desktop locked)`, `DEVPOST_NOT_SUBMITTED`. The provider rules require a *public* YouTube link, **under five minutes**; this local MP4 satisfies the video duration/content prerequisite but not online publication.
+
+**No new competition entry should be represented as submitted until the organizer's own receipt exists.**
