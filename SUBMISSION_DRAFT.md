@@ -1,14 +1,23 @@
-# Codegeist 2026 — draft, not submitted
+# SpecGuard — Codegeist 2026 submission packet
 
-**Project:** SpecGuard: Evidence-aware acceptance criteria in Jira
-**Entrant:** Daniel Paluszek; contact: issueslinux@gmail.com
-**Category:** Apps for Software Teams
-**Status:** DRAFT — an actual Forge install, video and Devpost login are still mandatory.
+**State (1 November 2026):** Real Forge production app and production installation verified; the authentic Jira demo is public on YouTube; **Devpost participant registration and final entry submission NOT completed**. Do not claim a project receipt.
 
-**Pitch:** A Jira issue may appear “done” because checkboxes are checked, while no one has verified the associated tests. SpecGuard turns issue requirements into a compact evidence map and highlights missing reproduction steps and evidence without ever claiming tests passed.
+**Title:** SpecGuard — Evidence-Aware Acceptance Criteria in Jira  
+**Category:** Apps for Software Teams  
+**Code:** https://github.com/issueslinux/specguard  
+**Public demo:** https://www.youtube.com/watch?v=wJgeXoUsTg0 (74 seconds, publicly accessible, actual Jira SGD-1/SGD-2 panels).  
+**Contest:** https://codegeist2026.devpost.com/
 
-**Implementation:** Atlassian Forge UI Kit issuePanel, asUser Jira read-only request, ADF parsing and deterministic evidence rules. Tests are self-contained and do not rely on external APIs.
+## Devpost description
 
-**Judge setup:** install the Forge app from a real sharing link (TO BE CREATED ONLY AFTER DEPLOYMENT), open a Jira issue containing an Acceptance Criteria section and show the panel. Public YouTube demonstration (TO BE RECORDED FROM A LIVE DEPLOYMENT).
+SpecGuard is a read-only Jira Cloud issue panel built on Atlassian Forge. It extracts structured acceptance criteria from issue descriptions, checks four specification-presence elements and reports missing review or test-evidence references without claiming that any tests passed.
 
-**Honest disclosures:** AI-assisted source generation and tests, personally reviewed by the entrant before release; no deployment and no submissions as of October 31, 2026. We have no public video or installation link yet. Do not post this incomplete draft as a valid Codegeist entry.
+SpecGuard does not modify issues, process private data with external models or make release decisions. Instead, it gives reviewers a clear distinction between requirements that were *written down* and requirements that have *actually been verified*. The application uses a Forge Jira issuePanel, current-user Jira read-only permissions, Atlassian Document Format parsing and deterministic JavaScript analysis.
+
+In the real Forge demonstration, fictional issue SGD-1 has three criteria marked NOT VERIFIED and specification completeness 3/4. SGD-2 has no structured acceptance criteria and completeness 0/4. The panel provides a Refresh analysis action. Automated source tests: 35 passing. Test results do not imply independent acceptance of the issue criteria.
+
+## Judge access and final submission
+
+Install the production Forge app through the **actual signed Jira sharing URL** available privately in the existing Atlassian Developer Console → SpecGuard → Distribution, not through the console page itself. Never paste that signed URL into GitHub. Judges can open an issue with an Acceptance Criteria section and select “SpecGuard - Acceptance Evidence”. No cloud AI key is required. Sample fictional issue data and installation instructions are in the source repository.
+
+The signed-in Devpost owner account was redirected from Join hackathon to an actual participant registration form. Two non-personal fields were prefilled (Atlassian developer account Yes; goal Competition). **The owner must answer their personal experience/participation questions and accept the Official Rules and Terms of Service before clicking Register.** Then search My projects for duplicates before creating/sending the Codegeist entry. A real submission receipt/URL is still missing.

@@ -1,3 +1,13 @@
+## Update — 1 November 2026: public video verified; participant registration requires owner consent
+
+- **Public video VERIFIED:** https://www.youtube.com/watch?v=wJgeXoUsTg0 — *Specguard codegeist demo* by *Linux Issues*. Anonymous YouTube oEmbed returned metadata; anonymous watch-page inspection showed `isUnlisted=false`, `isPrivate=false`, `playabilityStatus.status=OK` and `lengthSeconds=74`. The <5-minute/public video gate is complete.
+- **Devpost account login VERIFIED** in the authorized desktop Firefox session. The actual **Join hackathon** action opened `codegeist2026.devpost.com/register`; therefore the account is **not yet registered as a Codegeist participant**. No SpecGuard Devpost entry is confirmed.
+- Registration asks participant-specific questions (teammates, referral source, AI experience level, Atlassian/Forge experience level, prior Codegeist participation). Only the documented, factual **Atlassian developer account = Yes** and project goal **Competition** were prefilled. Unknown personal answers were deliberately not guessed.
+- **Owner-only action required:** personally complete the unanswered participant details; check *“I have read and agree to be bound by the Official Rules and the Devpost Terms of Service”* after reviewing them; click **Register**. No automated legal consent, checkbox action or registration claim. After actual registration, check **My projects** for an existing SpecGuard entry before creating a new one, then fill with the public video URL, accurate English judge packet and a genuine signed Forge production judge-install URL from Atlassian Developer Console.
+- Status: public demo **YES**; production Forge installation **YES**; Devpost login **YES**; Codegeist participant registration **PENDING OWNER CONSENT**; Devpost project submission **NOT CONFIRMED**; award **NONE**.
+
+The older sections below are historical observations before the video upload or Devpost login and must not override this dated evidence.
+
 # SpecGuard — production and Codegeist closeout evidence (1 November 2026)
 
 **State:** native tests PASS, Forge production deployment/installation **confirmed**, live Jira issue panel **observed**, signed production installation link **confirmed present** in Atlassian console. **Independent judge-site install NOT VERIFIED; public YouTube demo NOT PUBLISHED; Devpost NOT SUBMITTED.** Neither a CLI installation nor a test-site panel is a competition receipt.
