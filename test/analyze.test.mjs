@@ -91,3 +91,50 @@ test('Markdown report never asserts verification and escapes issue title',()=>{
   assert.doesNotMatch(markdown,/<script>/);
   assert.match(markdown,/- \[ \] AC-01: Store records/);
 });
+
+// The two live Jira demo tickets use rich-text headings; this fixture is a
+// synthetic ADF representation of their published content, not a Jira API test.
+test('SGD-1-style ADF headings count expected behavior and reproduction', () => {
+  const paragraph = text => ({type:'paragraph',content:[{type:'text',text}]});
+  const heading = text => ({type:'heading',attrs:{level:2},content:[{type:'text',text}]});
+  const bullet = text => ({type:'listItem',content:[paragraph(text)]});
+  const description = {type:'doc',content:[
+    heading('Acceptance Criteria'),
+    {type:'bulletList',content:[bullet('Show subsidiary selector after non-authentication failures'),
+      bullet('Hide selector after rejected credentials')]},
+    heading('Expected Behavior'), paragraph('Administrator can switch subsidiary after a sync failure.'),
+    heading('Reproduction'), {type:'orderedList',content:[bullet('Connect mock integration'), bullet('Simulate failure')]},
+    heading('Evidence'), paragraph('TODO: attach test report; not verified.')
+  ]};
+  const result = analyze({key:'SGD-1',fields:{summary:'Fictional demo',description}});
+  assert.equal(result.criteria.length,2);
+  assert.equal(result.completeness.present,3);
+  assert.deepEqual(result.completeness.missing, ['No review, CI run or test-report reference was found.']);
+  assert.ok(result.criteria.every(item => item.verified === false));
+});
+
+test('SGD-2-style incomplete prose does not fabricate sections or evidence', () => {
+  const description = doc('The expected behavior is unclear and reproduction is not documented.\nEvidence: TODO.');
+  const result = analyze({key:'SGD-2',fields:{summary:'Fictional demo',description}});
+  assert.equal(result.completeness.present,0);
+  assert.equal(result.criteria.length,0);
+});
+
+test('ADF labeled link marks preserve unverified review references', () => {
+  const description = {type:'doc',content:[{type:'paragraph',content:[
+    {type:'text',text:'Review PR',marks:[{type:'link',attrs:{href:'https://github.com/acme/app/pull/42'}}]},
+    {type:'text',text:' and a report',marks:[{type:'link',attrs:{href:'https://ci.example.org/test-reports/9/index.html'}}]}
+  ]}]};
+  const result = analyze({key:'SGD-1',fields:{summary:'Demo',description}});
+  assert.deepEqual(result.evidenceDetails.map(x => x.kind), ['pull_request','test_report']);
+  assert.equal(result.completeness.present,1);
+  assert.match(result.disclaimer, /No tests were executed/);
+});
+
+test('ADF unsafe link targets are not promoted to evidence', () => {
+  const description = {type:'doc',content:[{type:'paragraph',content:[
+    {type:'text',text:'Report',marks:[{type:'link',attrs:{href:'javascript:alert(1)'}}]},
+    {type:'text',text:' fake',marks:[{type:'link',attrs:{href:'https://github.com.evil.example/a/b/pull/1'}}]}
+  ]}]};
+  assert.deepEqual(analyze({fields:{description}}).evidenceReferences, []);
+});

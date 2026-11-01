@@ -12,7 +12,15 @@ export function adfToText(node) {
     if (depth > 50 || size >= MAX_TEXT) return;
     if (Array.isArray(n)) { for (const child of n) walk(child, depth + 1); return; }
     if (!n || typeof n !== 'object') return;
-    if (n.type === 'text' && typeof n.text === 'string') { const token = n.text.slice(0, MAX_TEXT - size); result.push(token); size += token.length; return; }
+    if (n.type === 'text' && typeof n.text === 'string') {
+      // Jira's rich-text editor stores link targets in ADF marks. A label such
+      // as "Test report" must not erase the URL needed for evidence triage.
+      const href = n.marks?.find(mark => mark?.type === 'link' &&
+        typeof mark.attrs?.href === 'string' && /^https:\/\//i.test(mark.attrs.href))?.attrs.href;
+      const token = n.text + (href && !n.text.includes(href) ? ' ' + href : '');
+      const bounded = token.slice(0, MAX_TEXT - size);
+      result.push(bounded); size += bounded.length; return;
+    }
     if (n.type === 'hardBreak') { result.push('\n'); size++; return; }
     const block = ['paragraph','heading','listItem','codeBlock','blockquote','tableRow'].includes(n.type);
     // Preserve ADF heading and list-item boundaries. Without these markers,
@@ -121,9 +129,14 @@ export function analyze(issue) {
   const criteria = extractCriteria(desc);
   const missing = [];
   if (!criteria.length) missing.push('Acceptance criteria are not specified in a structured, testable form.');
-  if (!/expected(?:\s+behavior|\s+result)?\s*:/i.test(desc) && !/Then\s+[^\n]+/i.test(desc))
+  // ADF headings are rendered as Markdown headings, not colon-delimited
+  // labels. Recognize both forms without counting mentions in ordinary prose.
+  const namedSection = pattern => pattern.test(desc);
+  if (!namedSection(/(?:^|\n)\s*#{1,6}\s+expected(?:\s+behavior|\s+result)\s*(?:\n|$)/i) &&
+      !/expected(?:\s+behavior|\s+result)?\s*:/i.test(desc) && !/Then\s+[^\n]+/i.test(desc))
     missing.push('Expected behavior is not explicitly described.');
-  if (!/(reproduction|steps to reproduce|action performed|how to reproduce)\s*:/i.test(desc) && !/Given\s+[^\n]+/i.test(desc))
+  if (!namedSection(/(?:^|\n)\s*#{1,6}\s+(?:reproduction|steps to reproduce|verification steps|how to reproduce)\s*(?:\n|$)/i) &&
+      !/(reproduction|steps to reproduce|action performed|how to reproduce)\s*:/i.test(desc) && !/Given\s+[^\n]+/i.test(desc))
     missing.push('Reproduction or verification steps are not explicit.');
   const links = evidenceLinks(desc);
   const evidenceDetails = links.map(url => ({url, kind: classifyEvidenceUrl(url)}))
