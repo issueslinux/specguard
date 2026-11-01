@@ -1,6 +1,6 @@
 # SpecGuard — Codegeist 2026 judge packet
 
-**Status (1 Nov 2026):** real Forge development v2.1.0 deployed; live Jira panel verified. Contest NOT SUBMITTED (judge installation link, public real-app video and Devpost entry missing). Prepared 2026-10-31. No URL below is a real deployment proof. Original author / proposed entrant: Daniel Paluszek.
+**Status (1 Nov 2026):** real Forge development v2.1.0 deployed; live Jira panel verified. Contest NOT SUBMITTED (production judge installation link generated; public real-app video and Devpost entry missing). Prepared 2026-10-31. No URL below is a real deployment proof. Original author / proposed entrant: Daniel Paluszek.
 
 ## Devpost fields — final English copy
 
@@ -24,7 +24,7 @@ SpecGuard runs deterministic JavaScript rules; it does not ship personal Jira da
 
 ## Judge installation & test steps (publish only after live verification)
 
-1. Open the **real Forge sharing link**: `[ADD AFTER DEPLOYMENT]`. Install SpecGuard in an authorized Jira Cloud development/site environment, following the actual sharing flow.
+1. Open the **real Forge sharing link**: `retrievable signed URL from Forge Distribution console (production sharing; not the console URL itself)`. Install SpecGuard in an authorized Jira Cloud development/site environment, following the actual sharing flow.
 2. Open an existing Jira issue in the site, e.g. `[ADD AUTHORIZED TEST ISSUE KEY]`, then select **SpecGuard - Acceptance Evidence** panel.
 3. Confirm an issue with a structured acceptance section shows each AC as **NOT VERIFIED**; use a second issue with missing reproduction/evidence to observe gap messages. Click **Refresh analysis**. Verify an inaccessible issue does not leak content.
 
@@ -66,3 +66,10 @@ npm run preflight -- --strict   # intentionally exits 2 until app ID and depende
 Official Codegeist rules: https://codegeist2026.devpost.com/rules — deadline **2026-12-22 at 12:00 PST**. A real submission must include a public YouTube video **under 5 minutes**, an installation link for judges, English materials and a running Forge app. An unpublished GitHub PR or a private copy of this packet is not a competition entry.
 
 **Only the account owner can provide the missing Atlassian/Devpost account authorization and accept terms.** Do not invent an app ID, installation URL, public video, entry confirmation, payment, or test results.
+
+## Verified production installation and public distribution (1 November 2026)
+
+- Real Forge **production 2.0.0** built and deployed, followed by production installation in `issueslinux.atlassian.net`. Removed test DEV installation; CLI lists only production installation ID `2204c723-ad6c-4963-af57-b2a6c67cade2` as Up-to-date.
+- Verified true production extension panel on fictional `SGD-1` (not Jira description text): 3 NOT VERIFIED ACs, completeness 3/4, no evidence references, functional Refresh. https://agent.tinyfish.ai/runs/5c431b27-044f-4b29-ac01-0e8ade84eb55 .
+- Forge Distribution sharing is **Sharing with anyone**; a real signed Jira installation URL was generated and is available in the [developer distribution console](https://developer.atlassian.com/console/myapps/6f5132b0-059b-4210-871d-8295908ff02c/manage/distribution). Genuine contact `issueslinux@gmail.com` and privacy policy `https://github.com/issueslinux/specguard/blob/main/PRIVACY.md` replaced placeholder values.
+- **NOT SUBMITTED TO DEVPOST.** A real public YouTube video and authenticated Devpost submission/receipt are still needed. No claim of judging, award, or prize.
