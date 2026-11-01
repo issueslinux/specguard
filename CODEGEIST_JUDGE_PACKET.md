@@ -1,6 +1,6 @@
 # SpecGuard — Codegeist 2026 judge packet
 
-**Status:** COMPLETE DRAFT MATERIALS, **NOT READY TO SUBMIT** (requires real Forge deployment, install link, live video and Devpost account). Prepared 2026-10-31. No URL below is a real deployment proof. Original author / proposed entrant: Daniel Paluszek.
+**Status (1 Nov 2026):** real Forge development v2.1.0 deployed; live Jira panel verified. Contest NOT SUBMITTED (judge installation link, public real-app video and Devpost entry missing). Prepared 2026-10-31. No URL below is a real deployment proof. Original author / proposed entrant: Daniel Paluszek.
 
 ## Devpost fields — final English copy
 
@@ -20,7 +20,7 @@ SpecGuard runs deterministic JavaScript rules; it does not ship personal Jira da
 
 **Intended impact:** Reduce handoff ambiguity and false confidence in the completeness of issue descriptions. This is an aid to reviewers, not automated compliance verification, actual QA execution, or a software-quality classifier.
 
-**What was actually tested:** Offline JavaScript unit tests, structural checks, and representative demo data. **Not** tested in a live Jira Cloud tenant as of 2026-10-31; do not change this paragraph until actual runtime evidence is collected.
+**What was actually tested:** 35/35 native Node regression tests, real Forge lint/deploy/install and live browser UI in SGD-1: three acceptance criteria tagged NOT VERIFIED, a missing-evidence warning, and working Refresh analysis. https://agent.tinyfish.ai/runs/ac360431-bf8c-4f95-8741-870e02e42d85 . No actual acceptance test was executed.
 
 ## Judge installation & test steps (publish only after live verification)
 

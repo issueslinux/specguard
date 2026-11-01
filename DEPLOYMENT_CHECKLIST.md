@@ -111,3 +111,15 @@ Nie wymaga GitHub Actions ani Desktop Commandera.
 - Fixed two Jira ADF false negatives: `## Expected Behavior` / `## Reproduction` headings now count as named sections, and linked text with an ADF `link` mark preserves its HTTPS target for **unverified** evidence-reference classification. Four new regression tests cover fictional SGD-1/SGD-2-shaped ADF, labeled links and unsafe targets. These tests use synthetic ADF and are **not** live Forge/Jira panel tests.
 - Real Jira tickets SGD-1 and SGD-2 were read independently through Atlassian; both are fictional demo tickets. `forge lint` with a working D-Bus keyring still returns **Not logged in**. `FORGE_API_TOKEN` is absent, and `manifest.yml` still has the placeholder app ID. No `forge register`, `forge deploy` or `forge install` was performed, no sharing link exists.
 - External prerequisite: the owner must complete Atlassian MFA if requested and configure a scoped Forge API token in a trusted shell (never GitHub, logs or chat); any new binding terms must be reviewed by the owner. Only then run `scripts/deploy_to_jira.sh --deploy` and verify the live panel and sharing settings.
+
+## Live proof — 2026-11-01
+
+- Owner accepted developer terms, registered app ID `6f5132b0-059b-4210-871d-8295908ff02c`; CLI `forge whoami` confirmed Linux Issues. Node 24.22.1, Forge CLI 15.0.0.
+- Fixed mandatory `icon` and handler path `backend/index.handler` relative to `src`. `forge lint`: No issues found. `forge deploy -e development`: v2.0.0 then v2.1.0 successful. `forge install list` confirms Jira installation `644bfbd3-a7a6-4a7d-83a1-6963429fd9b3` status Up-to-date.
+- First live browser test failed on `out_namespaceObject is not a constructor`; Forge logs traced it to resolver initialization. Fixed CJS/ESM export handling and redeployed. Second live browser test PASS: 3 criteria, all NOT VERIFIED, completeness 3/4, missing review evidence, refresh functional. https://agent.tinyfish.ai/runs/ac360431-bf8c-4f95-8741-870e02e42d85 . 35/35 Node tests PASS.
+- Forge developer distribution sharing enabled for app; a judge installation link still requires **production deployment** and privacy/contact details verified as real, not placeholders. Public video, Devpost entry and submission receipt remain pending.
+
+### Production deployment (1 November 2026)
+
+- `forge deploy -e production` completed and the CLI reports **SpecGuard production version 2.0.0 deployed**. The development installation on SGD-1 remains version 2.1.0 and was independently UI-tested. Production deployment alone is not equivalent to the judge installation link or a contest submission.
+- Public original source will be maintained at `https://github.com/issueslinux/specguard`, with an actual privacy policy `PRIVACY.md`. Production installation link and support/vendor metadata require independent verification in the Forge developer console.

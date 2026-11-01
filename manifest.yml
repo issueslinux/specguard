@@ -6,9 +6,10 @@ modules:
         function: resolver
       render: native
       title: SpecGuard - Acceptance Evidence
+      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
   function:
     - key: resolver
-      handler: src/backend/index.handler
+      handler: backend/index.handler
 resources:
   - key: main
     path: src/frontend/index.jsx
@@ -17,8 +18,7 @@ app:
     name: nodejs24.x
     memoryMB: 256
     architecture: arm64
-  # Replace after registering the app with `forge register`.
-  id: ari:cloud:ecosystem::app/00000000-0000-0000-0000-000000000000
+  id: ari:cloud:ecosystem::app/6f5132b0-059b-4210-871d-8295908ff02c
 permissions:
   scopes:
     - read:jira-work

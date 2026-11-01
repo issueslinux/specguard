@@ -10,8 +10,8 @@ export function inspect(root) {
   const manifest = readFileSync(join(root, 'manifest.yml'), 'utf8');
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
   const checks = [
-    {name:'manifest issuePanel UI Kit', pass: /jira:issuePanel:/.test(manifest) && /render:\s*native/.test(manifest) && /resource:\s*main/.test(manifest)},
-    {name:'resolver declared', pass: /handler:\s*src\/backend\/index\.handler/.test(manifest)},
+    {name:'manifest issuePanel UI Kit', pass: /jira:issuePanel:/.test(manifest) && /render:\s*native/.test(manifest) && /resource:\s*main/.test(manifest) && /icon:\s*\S+/.test(manifest)},
+    {name:'resolver declared', pass: /handler:\s*backend\/index\.handler/.test(manifest)},
     {name:'minimum Jira read-only permission', pass: /-\s*read:jira-work/.test(manifest) && !/-\s*write:jira-work/.test(manifest)},
     {name:'registered Forge app ID', pass: /id:\s*ari:cloud:ecosystem::app\/[0-9a-f]{8}-[0-9a-f-]{27,36}/i.test(manifest) && !/00000000-0000-0000-0000-000000000000/.test(manifest)},
     {name:'installed dependency bundle', pass: existsSync(join(root, 'node_modules', '@forge', 'react', 'package.json'))},

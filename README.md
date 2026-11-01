@@ -1,8 +1,8 @@
-> **Codegeist judge packet:** [CODEGEIST_JUDGE_PACKET.md](CODEGEIST_JUDGE_PACKET.md) contains ready-to-review Devpost text, authorized Jira install/test steps, a <3-minute **real app** video plan and explicit external gates. The app cannot honestly be called submitted until Forge registration/deployment, a verified judge installation link, a public YouTube video and a Devpost submission exist. The offline source tests do not satisfy these gates.
+> **Codegeist judge packet:** [CODEGEIST_JUDGE_PACKET.md](CODEGEIST_JUDGE_PACKET.md) contains ready-to-review Devpost text, authorized Jira install/test steps, a <3-minute **real app** video plan and explicit external gates. Forge registration, development deployment and real Jira smoke tests PASS. Contest submission still requires a working judge installation link, a public real-app YouTube video and a Devpost submission receipt. The offline source tests do not satisfy these gates.
 
 # SpecGuard — evidence-aware Jira issue review (Codegeist 2026 candidate)
 
-**Author / proposed entrant:** Daniel Paluszek (GitHub `issueslinux`). **Status:** real source + offline tests, **not** registered, deployed, publicly submitted, judged, accepted or awarded. Developed after Codegeist 2026 opened on October 27.
+**Author / proposed entrant:** Daniel Paluszek (GitHub `issueslinux`). **Status (1 Nov 2026):** registered, deployed as development v2.1.0 and installed on issueslinux.atlassian.net; real Jira issue panel independently verified. Not yet submitted to Codegeist/Devpost or awarded. Developed after Codegeist 2026 opened on October 27.
 
 ## Problem
 
@@ -77,3 +77,10 @@ The Jira Cloud site and test project **are now available**; Forge CLI, package i
 ## Tests and limitations
 
 `npm test` runs offline Node tests over sample ADF documents, deduplication, statuses, URL evidence, absence of false verification and input bounds. No Jira integration test has run. ADF-to-text may miss complex extension content; regex extraction is intentionally incomplete; external links are untrusted. Avoid personal information in public demonstration data. Do **not** present output as an objective risk score or proof of compliance.
+
+## Live Forge deployment and Jira smoke test — 2026-11-01
+
+- Forge app ID `6f5132b0-059b-4210-871d-8295908ff02c`; developer space Linux Issues; runtime Node 24.22.1 / Forge CLI 15.0.0. App deployed to the development environment (v2.1.0) and installed in Jira at `issueslinux.atlassian.net` with read-only scope `read:jira-work`.
+- Fixed two production-discovered manifest errors (`icon` required; function `handler` is relative to `src/`) and runtime CJS/ESM mismatch in `@forge/resolver` (`out_namespaceObject is not a constructor`). After redeploy, real SGD-1 issue-panel UI showed three acceptance criteria, NOT VERIFIED badges, completeness 3/4, missing evidence, and working Refresh button. [Independent browser verification](https://agent.tinyfish.ai/runs/ac360431-bf8c-4f95-8741-870e02e42d85).
+- **35/35 native tests PASS**, including backend import and manifest regression checks. The app neither writes issue data nor claims that an acceptance test passed.
+- The vendor's privacy information is published in [PRIVACY.md](PRIVACY.md). Codegeist contest **NOT SUBMITTED** until judge installation link, real YouTube demonstration and Devpost entry exist.
