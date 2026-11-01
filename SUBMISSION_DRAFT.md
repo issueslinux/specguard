@@ -1,3 +1,7 @@
+## Submission receipt (actual) — 1 November 2026
+
+**SUBMITTED** to **Codegeist 2026: Build with context. Ship with confidence**. Actual canonical Devpost project: https://devpost.com/software/specguard-acceptance-evidence-for-jira , authenticated on the entrant browser with `Project submitted!` banner and the competition hyperlink. Submission ID **1277032**; Devpost editing page remains available until the competition deadline. Public YouTube demonstration https://www.youtube.com/watch?v=wJgeXoUsTg0 (74 seconds). Forge production judge-installation URL was entered directly into Devpost's private judge-access field, not saved in GitHub. **No results, prize, winnings or payout confirmed.** Older "NOT SUBMITTED" and "owner must accept terms" paragraphs below are historical.
+
 # SpecGuard — Codegeist 2026 submission packet
 
 **State (1 November 2026):** Real Forge production app and production installation verified; the authentic Jira demo is public on YouTube; **Devpost participant registration and final entry submission NOT completed**. Do not claim a project receipt.
