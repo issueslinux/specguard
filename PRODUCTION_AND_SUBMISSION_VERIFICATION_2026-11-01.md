@@ -27,7 +27,7 @@ Record a true browser session of the authorized `SGD-1` and `SGD-2` Jira issues 
 - Category: **Apps for Software Teams**; no unearned bonus-prize claim.
 - Complete description already prepared in [CODEGEIST_JUDGE_PACKET.md](CODEGEIST_JUDGE_PACKET.md) and [SUBMISSION_DRAFT.md](SUBMISSION_DRAFT.md).
 - Required: official **working production Forge signed judge installation link**, proper access/test steps, **public <5-minute YouTube real-app demo**, entrant login and any personal legal/eligibility confirmation on Devpost.
-- Live browser verification of Devpost account authentication is still required; prior handoff records a signed-out session. **Only the owner can log in, complete MFA and accept rules; do not infer consent from a successful Forge login.**
+- Fresh [Devpost browser verification attempt, 1 November 2026](https://agent.tinyfish.ai/runs/c938ad24-c34b-46a9-9954-cf4ab9b35eb9) was blocked by an interactive Cloudflare **“Verify you are human”** challenge. Current Devpost login and existing SpecGuard draft **could not be determined**. The older handoff reported a signed-out session, but this new attempt does *not* independently reconfirm that state. The owner must pass the interactive challenge and authenticate in their own browser; no CAPTCHA/MFA bypass was attempted. **Only the owner can accept legal rules.**
 - Only after the completed Devpost submission page returns a real entry URL/receipt should Hunter status be advanced to `SUBMITTED`.
 
 ## Gate ledger
